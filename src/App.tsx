@@ -1,11 +1,12 @@
 import React from "react";
 import Calculator from "./compentes/Calculator";
+import { Grid } from "@mui/material";
 
 function App() {
   return (
-    <div style={{ padding: "30px" }}>
-      <Calculator data-testid="calculator" />
-    </div>
+    <Grid style={{ padding: "30px" }} role="calculator">
+      <Calculator />
+    </Grid>
   );
 }
 
