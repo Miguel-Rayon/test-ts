@@ -4,6 +4,6 @@ import App from "./App";
 
 test("renders component Calculator", () => {
   render(<App />);
-  const calculatorComponent = screen.getByRole("Calculator");
+  const calculatorComponent = screen.getByRole("calculator");
   expect(calculatorComponent).toBeInTheDocument();
 });

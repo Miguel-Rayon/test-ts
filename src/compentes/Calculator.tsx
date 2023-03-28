@@ -44,6 +44,7 @@ export default function Calculator() {
           SelectProps={{ native: true }}
           fullWidth
           onChange={(e) => setOperation(e.target.value)}
+          data-testid="oper"
         >
           <option value="sum" key="sum">
             Suma
@@ -65,6 +66,7 @@ export default function Calculator() {
           fullWidth
           value={number1}
           onChange={(e) => setNumber1(parseInt(e.target.value))}
+          data-testid="n1"
         ></TextField>
       </Grid>
       <Grid item xs={4}>
@@ -73,6 +75,7 @@ export default function Calculator() {
           fullWidth
           value={number2}
           onChange={(e) => setNumber2(parseInt(e.target.value))}
+          data-testid="n2"
         ></TextField>
       </Grid>
       <Grid item xs={4}>
@@ -85,8 +88,9 @@ export default function Calculator() {
           disableElevation
           size="large"
           sx={{ height: 55 }}
+          data-testid="cal"
         >
-          Realizar Operacion
+          Realizar Operación
         </Button>
       </Grid>
       <Grid item xs={12}>
