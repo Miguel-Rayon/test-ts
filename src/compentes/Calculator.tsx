@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { sum, rest, mult, divid } from "../utils/operationMath";
-import { Grid, TextField, Button, Typography } from "@mui/material";
-import CalculateIcon from "@mui/icons-material/Calculate";
+import { Grid, Typography } from "@mui/material";
 
 export default function Calculator() {
   const [number1, setNumber1] = useState(0);
@@ -12,16 +11,16 @@ export default function Calculator() {
 
   const handleSubmit = () => {
     switch (operation) {
-      case "sum":
+      case "suma":
         setResult(sum(number1, number2));
         break;
-      case "rest":
+      case "resta":
         setResult(rest(number1, number2));
         break;
-      case "mult":
+      case "multiplicacion":
         setResult(mult(number1, number2));
         break;
-      case "divid":
+      case "division":
         if (number2 === 0) setError("No se puede dividir entre 0");
         if (number2 !== 0) setResult(divid(number1, number2));
         break;
@@ -30,71 +29,54 @@ export default function Calculator() {
     }
   };
 
+  useEffect(() => {
+    if (operation && number1 !== 0 && number2 !== 0) handleSubmit();
+  }, [operation, number1, number2]);
+
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} data-testid="oper">
-        <TextField
+      <Grid item xs={12}>
+        <select
           value={operation}
           name="operation"
-          select
-          required
-          variant="outlined"
-          InputLabelProps={{ shrink: true }}
-          label="Operation"
-          SelectProps={{ native: true }}
-          fullWidth
+          data-testid="oper"
           onChange={(e) => setOperation(e.target.value)}
         >
-          <option value="sum" key="sum">
+          <option value="suma" key="sum">
             Suma
           </option>
-          <option value="rest" key="rest">
+          <option value="resta" key="rest">
             Resta
           </option>
-          <option value="mult" key="mult">
+          <option value="multiplicacion" key="mult">
             Multiplicacion
           </option>
-          <option value="divid" key="divid">
+          <option value="division" key="divid">
             Division
           </option>
-        </TextField>
+        </select>
       </Grid>
-      <Grid item xs={4} data-testid="n1">
-        <TextField
+      <Grid item xs={4}>
+        <input
           name="number1"
-          fullWidth
+          data-testid="n"
           value={number1}
           onChange={(e) => setNumber1(parseInt(e.target.value))}
         />
       </Grid>
-      <Grid item xs={4} data-testid="n2">
-        <TextField
+      <Grid item xs={4}>
+        <input
           name="number2"
-          fullWidth
+          data-testid="nn"
           value={number2}
           onChange={(e) => setNumber2(parseInt(e.target.value))}
         />
       </Grid>
-      <Grid item xs={4} data-testid="cal">
-        <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          onClick={handleSubmit}
-          startIcon={<CalculateIcon />}
-          disableElevation
-          size="large"
-          sx={{ height: 55 }}
-        >
-          Realizar Operación
-        </Button>
-      </Grid>
+      <Grid item xs={12}></Grid>
       <Grid item xs={12}>
         {error && <Typography>{error}</Typography>}
       </Grid>
-      <Grid item xs={12} data-testid="res">
-        {result && <Typography>El resultado es {result}</Typography>}
-      </Grid>
+      <div data-testid="res">{result && "El resultado es:" + result}</div>
     </Grid>
   );
 }

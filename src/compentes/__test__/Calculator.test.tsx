@@ -1,96 +1,106 @@
 import React from "react";
 import { render, fireEvent, screen } from "@testing-library/react";
 import Calculator from "../Calculator";
-import { sum, rest, mult, divid } from "../../utils/operationMath";
+import {
+  sum,
+  rest,
+  mult,
+  divid,
+  generarNumero,
+} from "../../utils/operationMath";
 
 it("render all element the screen", () => {
   render(<Calculator />);
 
   const operation = screen.getByTestId("oper");
-  const number1Input = screen.getByTestId("n1");
-  const number2Input = screen.getByTestId("n2");
-  const calculateButton = screen.getByTestId("cal");
+  const number1Input = screen.getByTestId("n");
+  const number2Input = screen.getByTestId("nn");
 
   expect(number1Input).toBeInTheDocument();
   expect(number2Input).toBeInTheDocument();
   expect(operation).toBeInTheDocument();
-  expect(calculateButton).toBeInTheDocument();
 });
 
 it("sum operation", () => {
   render(<Calculator />);
 
-  let value1: number = Math.random() * 99 + 1;
-  let value2: number = Math.random() * 99 + 1;
+  let value1: number = generarNumero(1, 5);
+  let value2: number = generarNumero(1, 5);
 
-  const number1 = screen.getByTestId("n1");
-  const number2 = screen.getByTestId("n2");
+  const number1 = screen.getByTestId("n");
+  const number2 = screen.getByTestId("nn");
+  const operation = screen.getByTestId("oper");
 
   fireEvent.change(number1, { target: { value: value1 } });
   fireEvent.change(number2, { target: { value: value2 } });
+  fireEvent.change(operation, { target: { value: "suma" } });
 
   expect(screen.getByTestId("res").textContent).toBe(
-    "El resultado es" + sum(value1, value2)
+    `El resultado es:${sum(value1, value2)}`
   );
 });
 
 it("substract operation", () => {
   render(<Calculator />);
 
-  let value1: number = Math.random() * 99 + 1;
-  let value2: number = Math.random() * 99 + 1;
+  let value1: number = generarNumero(1, 5);
+  let value2: number = generarNumero(1, 5);
 
-  const number1 = screen.getByTestId("n1");
-  const number2 = screen.getByTestId("n2");
+  const number1 = screen.getByTestId("n");
+  const number2 = screen.getByTestId("nn");
+  const operation = screen.getByTestId("oper");
 
   fireEvent.change(number1, { target: { value: value1 } });
   fireEvent.change(number2, { target: { value: value2 } });
+  fireEvent.change(operation, { target: { value: "resta" } });
 
   expect(screen.getByTestId("res").textContent).toBe(
-    "El resultado es" + rest(value1, value2)
+    `El resultado es:${rest(value1, value2)}`
   );
 });
 
 it("multiply operation", () => {
   render(<Calculator />);
 
-  let value1: number = Math.random() * 99 + 1;
-  let value2: number = Math.random() * 99 + 1;
+  let value1: number = generarNumero(1, 5);
+  let value2: number = generarNumero(1, 5);
 
-  const number1 = screen.getByTestId("n1") as HTMLInputElement;
-  const number2 = screen.getByTestId("n2") as HTMLInputElement;
+  const number1 = screen.getByTestId("n");
+  const number2 = screen.getByTestId("nn");
+  const operation = screen.getByTestId("oper");
 
   fireEvent.change(number1, { target: { value: value1 } });
   fireEvent.change(number2, { target: { value: value2 } });
+  fireEvent.change(operation, { target: { value: "multiplicacion" } });
 
   expect(screen.getByTestId("res").textContent).toBe(
-    "El resultado es" + mult(value1, value2)
+    `El resultado es:${mult(value1, value2)}`
   );
 });
 
 it("divide operation", () => {
   render(<Calculator />);
 
-  let value1: number = Math.random() * 99 + 1;
-  let value2: number = Math.random() * 99 + 1;
+  let value1: number = generarNumero(1, 5);
+  let value2: number = generarNumero(1, 5);
 
-  const number1 = screen.getByTestId("n1") as HTMLInputElement;
-  const number2 = screen.getByTestId("n2") as HTMLInputElement;
-
-  fireEvent.change(number1, { target: { value: value1 } });
-  fireEvent.change(number2, { target: { value: value2 } });
+  fireEvent.change(screen.getByTestId("n"), { target: { value: value1 } });
+  fireEvent.change(screen.getByTestId("nn"), { target: { value: value2 } });
+  fireEvent.change(screen.getByTestId("oper"), {
+    target: { value: "division" },
+  });
 
   expect(screen.getByTestId("res").textContent).toBe(
-    "El resultado es" + divid(value1, value2)
+    `El resultado es:${divid(value1, value2)}`
   );
 });
 
 it("divide by 0 operation", () => {
   render(<Calculator />);
 
-  const value: number = Math.random() * 99 + 1;
+  const value: number = generarNumero(1, 5);
 
-  fireEvent.change(screen.getByTestId("n1") as HTMLInputElement, {
+  fireEvent.change(screen.getByTestId("n"), {
     target: { value: value },
   });
 
