@@ -32,7 +32,7 @@ export default function Calculator() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      <Grid item xs={12} data-testid="oper">
         <TextField
           value={operation}
           name="operation"
@@ -44,7 +44,6 @@ export default function Calculator() {
           SelectProps={{ native: true }}
           fullWidth
           onChange={(e) => setOperation(e.target.value)}
-          data-testid="oper"
         >
           <option value="sum" key="sum">
             Suma
@@ -60,25 +59,23 @@ export default function Calculator() {
           </option>
         </TextField>
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={4} data-testid="n1">
         <TextField
           name="number1"
           fullWidth
           value={number1}
           onChange={(e) => setNumber1(parseInt(e.target.value))}
-          data-testid="n1"
-        ></TextField>
+        />
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={4} data-testid="n2">
         <TextField
           name="number2"
           fullWidth
           value={number2}
           onChange={(e) => setNumber2(parseInt(e.target.value))}
-          data-testid="n2"
-        ></TextField>
+        />
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={4} data-testid="cal">
         <Button
           variant="contained"
           color="primary"
@@ -88,14 +85,15 @@ export default function Calculator() {
           disableElevation
           size="large"
           sx={{ height: 55 }}
-          data-testid="cal"
         >
           Realizar Operación
         </Button>
       </Grid>
       <Grid item xs={12}>
         {error && <Typography>{error}</Typography>}
-        {result && <Typography> El resultado es {result}</Typography>}
+      </Grid>
+      <Grid item xs={12} data-testid="res">
+        {result && <Typography>El resultado es {result}</Typography>}
       </Grid>
     </Grid>
   );
