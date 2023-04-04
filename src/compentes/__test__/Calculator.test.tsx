@@ -9,6 +9,11 @@ import {
   generarNumero,
 } from "../../utils/operationMath";
 
+afterEach(() => {
+  // restore the spy created with spyOn
+  jest.restoreAllMocks();
+});
+
 it("render all element the screen", () => {
   render(<Calculator />);
 
@@ -35,7 +40,7 @@ it("sum operation", () => {
   fireEvent.change(number2, { target: { value: value2 } });
   fireEvent.change(operation, { target: { value: "suma" } });
 
-  const sumSpy = jest.spyOn(operation, "suma");
+  const sumSpy = jest.spyOn(sum, "suma");
   expect(sumSpy).toHaveBeenCalledWith(value1, value2);
 
   expect(screen.getByTestId("res").textContent).toBe(
@@ -57,7 +62,7 @@ it("substract operation", () => {
   fireEvent.change(number2, { target: { value: value2 } });
   fireEvent.change(operation, { target: { value: "resta" } });
 
-  const restaSpy = jest.spyOn(operation, "resta");
+  const restaSpy = jest.spyOn(rest, "resta");
   expect(restaSpy).toHaveBeenCalledWith(value1, value2);
 
   expect(screen.getByTestId("res").textContent).toBe(
@@ -79,7 +84,7 @@ it("multiply operation", () => {
   fireEvent.change(number2, { target: { value: value2 } });
   fireEvent.change(operation, { target: { value: "multiplicacion" } });
 
-  const multiplicacionSpy = jest.spyOn(operation, "multiplicacion");
+  const multiplicacionSpy = jest.spyOn(mult, "multiplicacion");
   expect(multiplicacionSpy).toHaveBeenCalledWith(value1, value2);
 
   expect(screen.getByTestId("res").textContent).toBe(
@@ -101,7 +106,7 @@ it("divide operation", () => {
     target: { value: "division" },
   });
 
-  const divisionSpy = jest.spyOn(operation, "division");
+  const divisionSpy = jest.spyOn(divid, "division");
   expect(divisionSpy).toHaveBeenCalledWith(value1, value2);
 
   expect(screen.getByTestId("res").textContent).toBe(
