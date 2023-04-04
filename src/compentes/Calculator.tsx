@@ -5,7 +5,7 @@ import { Grid, Typography } from "@mui/material";
 export default function Calculator() {
   const [number1, setNumber1] = useState(0);
   const [number2, setNumber2] = useState(0);
-  const [operation, setOperation] = useState("sum");
+  const [operation, setOperation] = useState("suma");
   const [result, setResult] = useState(0);
   const [error, setError] = useState("");
 
@@ -35,11 +35,26 @@ export default function Calculator() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      <Grid
+        item
+        xs={12}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <select
           value={operation}
           name="operation"
           data-testid="oper"
+          style={{
+            width: "100%",
+            height: "50px",
+            borderRadius: "10px",
+            padding: "10px",
+            backgroundColor: "#eee",
+          }}
           onChange={(e) => setOperation(e.target.value)}
         >
           <option value="suma" key="sum">
@@ -56,27 +71,59 @@ export default function Calculator() {
           </option>
         </select>
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={6}>
         <input
           name="number1"
           data-testid="n"
+          type="number"
           value={number1}
+          style={{
+            width: "90%",
+            height: "50px",
+            borderRadius: "10px",
+            backgroundColor: "#f0f0f0",
+            fontFamily: "Poppins, sans-serif",
+          }}
           onChange={(e) => setNumber1(parseInt(e.target.value))}
         />
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={6}>
         <input
           name="number2"
           data-testid="nn"
+          type="number"
           value={number2}
+          style={{
+            width: "90%",
+            height: "50px",
+            borderRadius: "10px",
+            backgroundColor: "#f0f0f0",
+            fontFamily: "Poppins, sans-serif",
+          }}
           onChange={(e) => setNumber2(parseInt(e.target.value))}
         />
       </Grid>
       <Grid item xs={12}></Grid>
       <Grid item xs={12}>
-        {error && <Typography>{error}</Typography>}
+        {error && (
+          <Typography variant="h5" style={{ fontSize: 20, fontWeight: 400 }}>
+            {error}
+          </Typography>
+        )}
       </Grid>
-      <div data-testid="res">{result && "El resultado es:" + result}</div>
+      <div
+        data-testid="res"
+        id="res"
+        data-value={result}
+        style={{
+          textAlign: "center",
+          fontSize: 18,
+          fontWeight: 400,
+          justifyContent: "center",
+        }}
+      >
+        {result && "El resultado es:" + result}
+      </div>
     </Grid>
   );
 }

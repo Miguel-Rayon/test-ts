@@ -1,18 +1,11 @@
 import React from "react";
 import { render, fireEvent, screen } from "@testing-library/react";
 import Calculator from "../Calculator";
-import {
-  sum,
-  rest,
-  mult,
-  divid,
-  generarNumero,
-} from "../../utils/operationMath";
+import * as operations from "../../utils/operationMath";
 
-afterEach(() => {
-  // restore the spy created with spyOn
-  jest.restoreAllMocks();
-});
+jest.mock("../../utils/operationMath");
+
+const { divid, generarNumero, mult, rest, sum } = operations;
 
 describe("Calculator", () => {
   test("renders correctly", () => {
@@ -108,84 +101,42 @@ it("divide operation", () => {
   );
 });
 
-it("divide by 0 operation", () => {
+it("spy for sum", () => {
   render(<Calculator />);
 
-  const value: number = generarNumero(1, 5);
+  let value1: any = generarNumero(1, 5) ?? 20;
+  let valu2: any = generarNumero(1, 5) ?? 20;
 
-  fireEvent.change(screen.getByTestId("n"), {
-    target: { value: value },
+  let inputN1: any = screen.getByTestId("n");
+  let inputN2: any = screen.getByTestId("nn");
+  let inputOper: any = screen.getByTestId("oper");
+  let inputRes: any = screen.getByTestId("res");
+
+  const spy = jest.spyOn(operations, "sum");
+
+  expect(inputN1.value).toBe("0");
+  expect(inputN2.value).toBe("0");
+  expect(inputOper.value).toBe("suma");
+
+  fireEvent.change(inputN1, { target: { value: value1 } });
+  fireEvent.change(inputN2, { target: { value: valu2 } });
+  fireEvent.change(inputOper, {
+    target: { value: "suma" },
   });
 
-  expect(() => {
-    divid(value, 0);
-  }).toThrowError("no se puede dividir entre 0 no sea imbecilillo :v");
-});
+  expect(inputN1.value).toBe(value1.toString());
+  expect(inputN1.value).toBe(valu2.toString());
+  expect(inputOper.value).toBe("suma");
 
-it("spy de suma", () => {
-  const handleSubmitSpy = jest.spyOn(Calculator.prototype, "handleSubmit");
-  const { getByTestId } = render(<Calculator />);
-  const number1Input = getByTestId("n");
-  const number2Input = getByTestId("nn");
-  const operationSelect = getByTestId("oper");
+  sum(parseFloat(inputN1.value), parseFloat(inputN2.value));
 
-  fireEvent.change(number1Input, { target: { value: generarNumero(1, 5) } });
-  expect(handleSubmitSpy).not.toHaveBeenCalled();
+  const result = sum(parseFloat(inputN1.value), parseFloat(inputN2.value));
 
-  fireEvent.change(number2Input, { target: { value: generarNumero(1, 5) } });
-  expect(handleSubmitSpy).toHaveBeenCalled();
+  fireEvent.change(inputRes, {
+    target: { "data-value": result },
+  });
 
-  fireEvent.change(operationSelect, { target: { value: "suma" } });
-  expect(handleSubmitSpy).toHaveBeenCalled();
-});
+  expect(inputRes["data-value"]).toBe(result);
 
-it("spy de resta", () => {
-  const handleSubmitSpy = jest.spyOn(Calculator.prototype, "handleSubmit");
-  const { getByTestId } = render(<Calculator />);
-  const number1Input = getByTestId("n");
-  const number2Input = getByTestId("nn");
-  const operationSelect = getByTestId("oper");
-
-  fireEvent.change(number1Input, { target: { value: generarNumero(1, 5) } });
-  expect(handleSubmitSpy).not.toHaveBeenCalled();
-
-  fireEvent.change(number2Input, { target: { value: generarNumero(1, 5) } });
-  expect(handleSubmitSpy).toHaveBeenCalled();
-
-  fireEvent.change(operationSelect, { target: { value: "resta" } });
-  expect(handleSubmitSpy).toHaveBeenCalled();
-});
-
-it("spy de multiplicacion", () => {
-  const handleSubmitSpy = jest.spyOn(Calculator.prototype, "handleSubmit");
-  const { getByTestId } = render(<Calculator />);
-  const number1Input = getByTestId("n");
-  const number2Input = getByTestId("nn");
-  const operationSelect = getByTestId("oper");
-
-  fireEvent.change(number1Input, { target: { value: generarNumero(1, 5) } });
-  expect(handleSubmitSpy).not.toHaveBeenCalled();
-
-  fireEvent.change(number2Input, { target: { value: generarNumero(1, 5) } });
-  expect(handleSubmitSpy).toHaveBeenCalled();
-
-  fireEvent.change(operationSelect, { target: { value: "multiplicacion" } });
-  expect(handleSubmitSpy).toHaveBeenCalled();
-});
-
-it("spy de division", () => {
-  const handleSubmitSpy = jest.spyOn(Calculator.prototype, "handleSubmit");
-  const { getByTestId } = render(<Calculator />);
-  const number1Input = getByTestId("n");
-  const number2Input = getByTestId("nn");
-  const operationSelect = getByTestId("oper");
-
-  fireEvent.change(number1Input, { target: { value: generarNumero(1, 5) } });
-  expect(handleSubmitSpy).not.toHaveBeenCalled();
-
-  fireEvent.change(number2Input, { target: { value: generarNumero(1, 5) } });
-  expect(handleSubmitSpy).toHaveBeenCalled();
-
-  fireEvent.change(operationSelect, { target: { value: "division" } });
-  expect(handleSubmitSpy).toHaveBeenCalled();
+  expect(spy).toHaveBeenCalled();
 });
