@@ -35,6 +35,9 @@ it("sum operation", () => {
   fireEvent.change(number2, { target: { value: value2 } });
   fireEvent.change(operation, { target: { value: "suma" } });
 
+  const sumSpy = jest.spyOn(operation, "suma");
+  expect(sumSpy).toHaveBeenCalledWith(value1, value2);
+
   expect(screen.getByTestId("res").textContent).toBe(
     `El resultado es:${sum(value1, value2)}`
   );
@@ -53,6 +56,9 @@ it("substract operation", () => {
   fireEvent.change(number1, { target: { value: value1 } });
   fireEvent.change(number2, { target: { value: value2 } });
   fireEvent.change(operation, { target: { value: "resta" } });
+
+  const restaSpy = jest.spyOn(operation, "resta");
+  expect(restaSpy).toHaveBeenCalledWith(value1, value2);
 
   expect(screen.getByTestId("res").textContent).toBe(
     `El resultado es:${rest(value1, value2)}`
@@ -73,6 +79,9 @@ it("multiply operation", () => {
   fireEvent.change(number2, { target: { value: value2 } });
   fireEvent.change(operation, { target: { value: "multiplicacion" } });
 
+  const multiplicacionSpy = jest.spyOn(operation, "multiplicacion");
+  expect(multiplicacionSpy).toHaveBeenCalledWith(value1, value2);
+
   expect(screen.getByTestId("res").textContent).toBe(
     `El resultado es:${mult(value1, value2)}`
   );
@@ -84,11 +93,16 @@ it("divide operation", () => {
   let value1: number = generarNumero(1, 5);
   let value2: number = generarNumero(1, 5);
 
+  const operation = screen.getByTestId("oper");
+
   fireEvent.change(screen.getByTestId("n"), { target: { value: value1 } });
   fireEvent.change(screen.getByTestId("nn"), { target: { value: value2 } });
-  fireEvent.change(screen.getByTestId("oper"), {
+  fireEvent.change(operation, {
     target: { value: "division" },
   });
+
+  const divisionSpy = jest.spyOn(operation, "division");
+  expect(divisionSpy).toHaveBeenCalledWith(value1, value2);
 
   expect(screen.getByTestId("res").textContent).toBe(
     `El resultado es:${divid(value1, value2)}`
