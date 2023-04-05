@@ -47,7 +47,7 @@ it("sum operation", () => {
   fireEvent.change(number2, { target: { value: value2 } });
   fireEvent.change(operation, { target: { value: "suma" } });
 
-  expect(screen.getByTestId("res").textContent).not.toBe(
+  expect(screen.getByTestId("res").textContent).toBe(
     `El resultado es:${sum(value1, value2)}`
   );
 });
@@ -66,7 +66,7 @@ it("substract operation", () => {
   fireEvent.change(number2, { target: { value: value2 } });
   fireEvent.change(operation, { target: { value: "resta" } });
 
-  expect(screen.getByTestId("res").textContent).not.toBe(
+  expect(screen.getByTestId("res").textContent).toBe(
     `El resultado es:${sum(value1, value2)}`
   );
 });
@@ -85,7 +85,7 @@ it("multiply operation", () => {
   fireEvent.change(number2, { target: { value: value2 } });
   fireEvent.change(operation, { target: { value: "multiplicacion" } });
 
-  expect(screen.getByTestId("res").textContent).not.toBe(
+  expect(screen.getByTestId("res").textContent).toBe(
     `El resultado es:${mult(value1, value2)}`
   );
 });
@@ -104,12 +104,12 @@ it("divide operation", () => {
     target: { value: "division" },
   });
 
-  expect(screen.getByTestId("res").textContent).not.toBe(
+  expect(screen.getByTestId("res").textContent).toBe(
     `El resultado es:${divid(value1, value2)}`
   );
 });
 
-it("spy for sum", () => {
+it.only("spy for sum", () => {
   render(<Calculator />);
 
   value1 = generarNumero(1, 5) ?? 20;
