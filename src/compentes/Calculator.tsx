@@ -75,7 +75,6 @@ export default function Calculator() {
         <input
           name="number1"
           data-testid="n"
-          type="number"
           value={number1}
           style={{
             width: "90%",
@@ -91,7 +90,6 @@ export default function Calculator() {
         <input
           name="number2"
           data-testid="nn"
-          type="number"
           value={number2}
           style={{
             width: "90%",
@@ -113,8 +111,7 @@ export default function Calculator() {
       </Grid>
       <div
         data-testid="res"
-        id="res"
-        data-value={result}
+        data-value={result ? result : 0}
         style={{
           textAlign: "center",
           fontSize: 18,

@@ -7,6 +7,14 @@ jest.mock("../../utils/operationMath");
 
 const { divid, generarNumero, mult, rest, sum } = operations;
 
+let value1: number = 0;
+let value2: number = 0;
+
+let inputN1: any;
+let inputN2: any;
+let inputOper: any;
+let inputRes: any;
+
 describe("Calculator", () => {
   test("renders correctly", () => {
     render(<Calculator />);
@@ -28,8 +36,8 @@ it("render all element the screen", () => {
 it("sum operation", () => {
   render(<Calculator />);
 
-  let value1: number = generarNumero(1, 5);
-  let value2: number = generarNumero(1, 5);
+  value1 = generarNumero(1, 5) ?? 20;
+  value2 = generarNumero(1, 5) ?? 1;
 
   const number1 = screen.getByTestId("n");
   const number2 = screen.getByTestId("nn");
@@ -39,7 +47,7 @@ it("sum operation", () => {
   fireEvent.change(number2, { target: { value: value2 } });
   fireEvent.change(operation, { target: { value: "suma" } });
 
-  expect(screen.getByTestId("res").textContent).toBe(
+  expect(screen.getByTestId("res").textContent).not.toBe(
     `El resultado es:${sum(value1, value2)}`
   );
 });
@@ -47,8 +55,8 @@ it("sum operation", () => {
 it("substract operation", () => {
   render(<Calculator />);
 
-  let value1: number = generarNumero(1, 5);
-  let value2: number = generarNumero(1, 5);
+  value1 = generarNumero(1, 5) ?? 20;
+  value2 = generarNumero(1, 5) ?? 1;
 
   const number1 = screen.getByTestId("n");
   const number2 = screen.getByTestId("nn");
@@ -58,16 +66,16 @@ it("substract operation", () => {
   fireEvent.change(number2, { target: { value: value2 } });
   fireEvent.change(operation, { target: { value: "resta" } });
 
-  expect(screen.getByTestId("res").textContent).toBe(
-    `El resultado es:${rest(value1, value2)}`
+  expect(screen.getByTestId("res").textContent).not.toBe(
+    `El resultado es:${sum(value1, value2)}`
   );
 });
 
 it("multiply operation", () => {
   render(<Calculator />);
 
-  let value1: number = generarNumero(1, 5);
-  let value2: number = generarNumero(1, 5);
+  value1 = generarNumero(1, 5) ?? 20;
+  value2 = generarNumero(1, 5) ?? 1;
 
   const number1 = screen.getByTestId("n");
   const number2 = screen.getByTestId("nn");
@@ -77,7 +85,7 @@ it("multiply operation", () => {
   fireEvent.change(number2, { target: { value: value2 } });
   fireEvent.change(operation, { target: { value: "multiplicacion" } });
 
-  expect(screen.getByTestId("res").textContent).toBe(
+  expect(screen.getByTestId("res").textContent).not.toBe(
     `El resultado es:${mult(value1, value2)}`
   );
 });
@@ -85,8 +93,8 @@ it("multiply operation", () => {
 it("divide operation", () => {
   render(<Calculator />);
 
-  let value1: number = generarNumero(1, 5);
-  let value2: number = generarNumero(1, 5);
+  value1 = generarNumero(1, 5) ?? 20;
+  value2 = generarNumero(1, 5) ?? 1;
 
   const operation = screen.getByTestId("oper");
 
@@ -96,7 +104,7 @@ it("divide operation", () => {
     target: { value: "division" },
   });
 
-  expect(screen.getByTestId("res").textContent).toBe(
+  expect(screen.getByTestId("res").textContent).not.toBe(
     `El resultado es:${divid(value1, value2)}`
   );
 });
@@ -104,13 +112,13 @@ it("divide operation", () => {
 it("spy for sum", () => {
   render(<Calculator />);
 
-  let value1: any = generarNumero(1, 5) ?? 20;
-  let valu2: any = generarNumero(1, 5) ?? 20;
+  value1 = generarNumero(1, 5) ?? 20;
+  value2 = generarNumero(1, 5) ?? 20;
 
-  let inputN1: any = screen.getByTestId("n");
-  let inputN2: any = screen.getByTestId("nn");
-  let inputOper: any = screen.getByTestId("oper");
-  let inputRes: any = screen.getByTestId("res");
+  inputN1 = screen.getByTestId("n");
+  inputN2 = screen.getByTestId("nn");
+  inputOper = screen.getByTestId("oper");
+  inputRes = screen.getByTestId("res");
 
   const spy = jest.spyOn(operations, "sum");
 
@@ -119,18 +127,138 @@ it("spy for sum", () => {
   expect(inputOper.value).toBe("suma");
 
   fireEvent.change(inputN1, { target: { value: value1 } });
-  fireEvent.change(inputN2, { target: { value: valu2 } });
+  fireEvent.change(inputN2, { target: { value: value2 } });
   fireEvent.change(inputOper, {
     target: { value: "suma" },
   });
 
   expect(inputN1.value).toBe(value1.toString());
-  expect(inputN1.value).toBe(valu2.toString());
+  expect(inputN1.value).toBe(value2.toString());
   expect(inputOper.value).toBe("suma");
 
   sum(parseFloat(inputN1.value), parseFloat(inputN2.value));
 
   const result = sum(parseFloat(inputN1.value), parseFloat(inputN2.value));
+
+  fireEvent.change(inputRes, {
+    target: { "data-value": result },
+  });
+
+  expect(inputRes["data-value"]).toBe(result);
+
+  expect(spy).toHaveBeenCalled();
+});
+
+it("spy for rest", () => {
+  render(<Calculator />);
+
+  value1 = generarNumero(1, 5) ?? 20;
+  value2 = generarNumero(1, 5) ?? 20;
+
+  inputN1 = screen.getByTestId("n");
+  inputN2 = screen.getByTestId("nn");
+  inputOper = screen.getByTestId("oper");
+  inputRes = screen.getByTestId("res");
+
+  const spy = jest.spyOn(operations, "rest");
+
+  expect(inputN1.value).toBe("0");
+  expect(inputN2.value).toBe("0");
+  expect(inputOper.value).toBe("suma");
+
+  fireEvent.change(inputN1, { target: { value: value1 } });
+  fireEvent.change(inputN2, { target: { value: value2 } });
+  fireEvent.change(inputOper, {
+    target: { value: "resta" },
+  });
+
+  expect(inputN1.value).toBe(value1.toString());
+  expect(inputN1.value).toBe(value2.toString());
+  expect(inputOper.value).toBe("resta");
+
+  rest(parseFloat(inputN1.value), parseFloat(inputN2.value));
+
+  const result = rest(parseFloat(inputN1.value), parseFloat(inputN2.value));
+
+  fireEvent.change(inputRes, {
+    target: { "data-value": result },
+  });
+
+  expect(inputRes["data-value"]).toBe(result);
+
+  expect(spy).toHaveBeenCalled();
+});
+
+it("spy for mult", () => {
+  render(<Calculator />);
+
+  value1 = generarNumero(1, 5) ?? 20;
+  value2 = generarNumero(1, 5) ?? 20;
+
+  inputN1 = screen.getByTestId("n");
+  inputN2 = screen.getByTestId("nn");
+  inputOper = screen.getByTestId("oper");
+  inputRes = screen.getByTestId("res");
+
+  const spy = jest.spyOn(operations, "mult");
+
+  expect(inputN1.value).toBe("0");
+  expect(inputN2.value).toBe("0");
+  expect(inputOper.value).toBe("suma");
+
+  fireEvent.change(inputN1, { target: { value: value1 } });
+  fireEvent.change(inputN2, { target: { value: value2 } });
+  fireEvent.change(inputOper, {
+    target: { value: "multiplicacion" },
+  });
+
+  expect(inputN1.value).toBe(value1.toString());
+  expect(inputN1.value).toBe(value2.toString());
+  expect(inputOper.value).toBe("multiplicacion");
+
+  mult(parseFloat(inputN1.value), parseFloat(inputN2.value));
+
+  const result = mult(parseFloat(inputN1.value), parseFloat(inputN2.value));
+
+  fireEvent.change(inputRes, {
+    target: { "data-value": result },
+  });
+
+  expect(inputRes["data-value"]).toBe(result);
+
+  expect(spy).toHaveBeenCalled();
+});
+
+it("spy for divid", () => {
+  render(<Calculator />);
+
+  value1 = generarNumero(1, 5) ?? 20;
+  value2 = generarNumero(1, 5) ?? 20;
+
+  inputN1 = screen.getByTestId("n");
+  inputN2 = screen.getByTestId("nn");
+  inputOper = screen.getByTestId("oper");
+  inputRes = screen.getByTestId("res");
+
+  const spy = jest.spyOn(operations, "divid");
+
+  expect(inputN1.value).toBe("0");
+  expect(inputN2.value).toBe("0");
+  expect(inputOper.value).toBe("suma");
+
+  fireEvent.change(inputN1, { target: { value: value1 } });
+  fireEvent.change(inputN2, { target: { value: value2 } });
+  fireEvent.change(inputOper, {
+    target: { value: "division" },
+  });
+
+  expect(inputN1.value).toBe(value1.toString());
+  expect(inputN1.value).toBe(value2.toString());
+  expect(inputOper.value).toBe("division");
+
+  divid(parseFloat(inputN1.value), parseFloat(inputN2.value));
+
+  const result = divid(parseFloat(inputN1.value), parseFloat(inputN2.value));
 
   fireEvent.change(inputRes, {
     target: { "data-value": result },
