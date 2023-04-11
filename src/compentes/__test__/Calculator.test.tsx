@@ -5,7 +5,7 @@ import * as operations from "../../utils/operationMath";
 
 jest.mock("../../utils/operationMath");
 
-const { divid, generarNumero, mult, rest, sum } = operations;
+const { divid, generarNumero, mult, rest, sum, operation } = operations;
 
 let value1: number = 0;
 let value2: number = 0;
@@ -136,9 +136,13 @@ it.only("spy for sum", () => {
   expect(inputN1.value).toBe(value2.toString());
   expect(inputOper.value).toBe("suma");
 
-  sum(parseFloat(inputN1.value), parseFloat(inputN2.value));
+  operation(parseFloat(inputN1.value), parseFloat(inputN2.value), "sum");
 
-  const result = sum(parseFloat(inputN1.value), parseFloat(inputN2.value));
+  const result = operation(
+    parseFloat(inputN1.value),
+    parseFloat(inputN2.value),
+    "sum"
+  );
 
   fireEvent.change(inputRes, {
     target: { "data-value": result },

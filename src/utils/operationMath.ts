@@ -35,7 +35,7 @@ interface ISalinasMatoAColosio<Number> {
   [id: string]: number | string;
 }
 
-export function operations(a: number, b: number, operation: any) {
+export function operation(a: number, b: number, operation: any) {
   const OPERATION: ISalinasMatoAColosio<string> = {
     sum: sum(a, b),
     rest: rest(a, b),
