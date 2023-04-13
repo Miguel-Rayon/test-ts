@@ -1,4 +1,4 @@
-import { sum, rest, mult, divid, generarNumero } from "../operationMath";
+import { sum, rest, mult, divid } from "../operationMath";
 
 it("suma de numeros", () => {
   const number1 = Math.random() * 99 + 1;

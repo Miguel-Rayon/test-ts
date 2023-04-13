@@ -1,154 +1,335 @@
-import React from "react";
-import { render, fireEvent, screen } from "@testing-library/react";
-import Calculator from "../Calculator";
+import { fireEvent, render, screen } from "@testing-library/react";
+
+import App from "../../App";
 import * as operations from "../../utils/operationMath";
+import Calculator from "../Calculator";
 
 jest.mock("../../utils/operationMath");
 
-const { divid, generarNumero, mult, rest, sum, operation } = operations;
+const {
+  divid,
+  getRandomCharacter,
+  getRandomFloat,
+  getRandomInt,
+  mult,
+  rest,
+  sum,
+} = operations;
 
-let value1: number = 0;
-let value2: number = 0;
+it("all in screen", () => {
+  render(<App />);
 
-let inputN1: any;
-let inputN2: any;
-let inputOper: any;
-let inputRes: any;
+  const calculator = screen.getByTestId("calculator");
 
-describe("Calculator", () => {
-  test("renders correctly", () => {
+  const a = screen.getByTestId("n");
+  const b = screen.getByTestId("nn");
+  const result = screen.getByTestId("result");
+
+  expect(a).toBeInTheDocument();
+  expect(b).toBeInTheDocument();
+  expect(result).toBeInTheDocument();
+  expect(calculator).toBeInTheDocument();
+});
+
+let valueA: number;
+let valueB: number;
+
+let wordA: string;
+let wordB: string;
+
+let inputA: any;
+let inputB: any;
+let inputOperator: any;
+let inputResult: any;
+
+describe("with decimals", () => {
+  describe("successfully", () => {
+    beforeEach(() => {
+      valueA = getRandomFloat(9) + 1;
+      valueB = getRandomFloat(9) + 1;
+    });
+
+    it("render sum", () => {
+      render(<Calculator />);
+
+      fireEvent.change(screen.getByTestId("n"), { target: { value: valueA } });
+      fireEvent.change(screen.getByTestId("nn"), { target: { value: valueB } });
+      fireEvent.change(screen.getByTestId("operator"), {
+        target: { value: "suma" },
+      });
+
+      expect(screen.getByTestId("result").textContent).toBe(
+        `El resultado es: ${sum(valueA, valueB)}`
+      );
+    });
+
+    it("render rest", () => {
+      render(<Calculator />);
+
+      fireEvent.change(screen.getByTestId("n"), { target: { value: valueA } });
+      fireEvent.change(screen.getByTestId("nn"), { target: { value: valueB } });
+      fireEvent.change(screen.getByTestId("operator"), {
+        target: { value: "resta" },
+      });
+
+      expect(screen.getByTestId("result").textContent).toBe(
+        `El resultado es: ${rest(valueA, valueB)}`
+      );
+    });
+
+    it("render mult", () => {
+      render(<Calculator />);
+
+      fireEvent.change(screen.getByTestId("n"), { target: { value: valueA } });
+      fireEvent.change(screen.getByTestId("nn"), { target: { value: valueB } });
+      fireEvent.change(screen.getByTestId("operator"), {
+        target: { value: "multiplicacion" },
+      });
+
+      expect(screen.getByTestId("result").textContent).toBe(
+        `El resultado es: ${mult(valueA, valueB)}`
+      );
+    });
+
+    it("render divid", () => {
+      render(<Calculator />);
+
+      fireEvent.change(screen.getByTestId("n"), { target: { value: valueA } });
+      fireEvent.change(screen.getByTestId("nn"), { target: { value: valueB } });
+      fireEvent.change(screen.getByTestId("operator"), {
+        target: { value: "division" },
+      });
+
+      expect(screen.getByTestId("result").textContent).toBe(
+        `El resultado es: ${divid(valueA, valueB)}`
+      );
+    });
+  });
+
+  describe("errors", () => {
+    beforeEach(() => {
+      valueA = getRandomFloat(9);
+      valueB = 0;
+    });
+
+    it("render divid by 0", () => {
+      render(<Calculator />);
+
+      fireEvent.change(screen.getByTestId("n"), { target: { value: valueA } });
+      fireEvent.change(screen.getByTestId("nn"), { target: { value: valueB } });
+      fireEvent.change(screen.getByTestId("operator"), {
+        target: { value: "divid" },
+      });
+
+      expect(screen.getByTestId("result").textContent).toBe(
+        `El resultado es: ${divid(valueA, valueB)}`
+      );
+    });
+  });
+});
+
+export function forEach(items: Array<any>, callback: any) {
+  for (let index = 0; index < items.length; index++) {
+    callback(items[index]);
+  }
+}
+
+describe("Calculator Tests", () => {
+  describe.only("renders", () => {
+    beforeEach(() => {
+      render(<Calculator />);
+    });
+
+    it("Check left input is in the document", () => {
+      expect(screen.getByTestId("n")).toBeInTheDocument();
+    });
+
+    it("Check right input is in the document", () => {
+      expect(screen.getByTestId("nn")).toBeInTheDocument();
+    });
+
+    it("Check operator select is in the document", () => {
+      expect(screen.getByTestId("oper")).toBeInTheDocument();
+    });
+
+    it("Check if result is in the document", () => {
+      expect(screen.getByTestId("res")).toBeInTheDocument();
+    });
+  });
+});
+
+describe("with integers", () => {
+  describe("successfully", () => {
+    let spy = jest.spyOn(operations, "operation");
+
+    beforeEach(() => {
+      operations.getRandomInt.mockReturnValue(Math.floor(Math.random() * 10));
+
+      valueA = operations.getRandomInt(9);
+      valueB = operations.getRandomInt(9) + 1;
+
+      operations.operation.mockReturnValue(valueA + valueB);
+
+      render(<Calculator />);
+
+      inputA = screen.getByTestId("n");
+      inputB = screen.getByTestId("nn");
+
+      fireEvent.change(inputA, { target: { value: valueA } });
+      fireEvent.change(inputB, { target: { value: valueB } });
+
+      inputOperator = screen.getByTestId("oper");
+      inputResult = screen.getByTestId("res");
+    });
+
+    it.only("renders sum", () => {
+      expect(inputOperator.value).toBe("suma");
+
+      fireEvent.change(inputOperator, {
+        target: { value: "suma" },
+      });
+
+      expect(inputA.value).toBe(valueA.toString());
+      expect(inputB.value).toBe(valueB.toString());
+      expect(inputOperator.value).toBe("suma");
+
+      fireEvent.change(inputResult, {
+        target: {
+          "data-value": parseFloat(inputA.value) + parseFloat(inputB.value),
+        },
+      });
+
+      expect(inputResult["data-value"]).toBe(
+        parseFloat(inputA.value) + parseFloat(inputB.value)
+      );
+
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it("renders rest", () => {
+      render(<Calculator />);
+
+      fireEvent.change(screen.getByTestId("n"), { target: { value: valueA } });
+      fireEvent.change(screen.getByTestId("nn"), { target: { value: valueB } });
+      fireEvent.change(screen.getByTestId("oper"), {
+        target: { value: "rest" },
+      });
+
+      expect(screen.getByTestId("result").textContent).toBe(
+        `El resultado es: ${rest(valueA, valueB)}`
+      );
+    });
+
+    it("renders mult", () => {
+      render(<Calculator />);
+
+      fireEvent.change(screen.getByTestId("n"), { target: { value: valueA } });
+      fireEvent.change(screen.getByTestId("nn"), { target: { value: valueB } });
+      fireEvent.change(screen.getByTestId("operator"), {
+        target: { value: "multiplicaion" },
+      });
+
+      expect(screen.getByTestId("result").textContent).toBe(
+        `El resultado es: ${mult(valueA, valueB)}`
+      );
+    });
+
+    it("renders divid", () => {
+      render(<Calculator />);
+
+      fireEvent.change(screen.getByTestId("n"), { target: { value: valueA } });
+      fireEvent.change(screen.getByTestId("nn"), { target: { value: valueB } });
+      fireEvent.change(screen.getByTestId("operator"), {
+        target: { value: "division" },
+      });
+
+      expect(screen.getByTestId("result").textContent).toBe(
+        `El resultado es: ${divid(valueA, valueB)}`
+      );
+    });
+  });
+
+  describe("errors", () => {
+    beforeEach(() => {
+      valueA = getRandomInt(9);
+      valueB = 0;
+    });
+
+    it("render divid by 0", () => {
+      render(<Calculator />);
+
+      fireEvent.change(screen.getByTestId("n"), { target: { value: valueA } });
+      fireEvent.change(screen.getByTestId("nn"), { target: { value: valueB } });
+      fireEvent.change(screen.getByTestId("operator"), {
+        target: { value: "division" },
+      });
+
+      expect(screen.getByTestId("result").textContent).toBe(
+        `El resultado es: ${divid(valueA, valueB)}`
+      );
+    });
+  });
+});
+
+describe("with alphanumeric", () => {
+  beforeEach(() => {
+    wordA = getRandomCharacter(9);
+    wordB = getRandomCharacter(9);
+  });
+
+  it("renders sum", () => {
     render(<Calculator />);
-  });
-});
 
-it("render all element the screen", () => {
-  render(<Calculator />);
+    fireEvent.change(screen.getByTestId("n"), { target: { value: wordA } });
+    fireEvent.change(screen.getByTestId("nn"), { target: { value: wordB } });
+    fireEvent.change(screen.getByTestId("operator"), {
+      target: { value: "sum" },
+    });
 
-  const operation = screen.getByTestId("oper");
-  const number1Input = screen.getByTestId("n");
-  const number2Input = screen.getByTestId("nn");
-
-  expect(number1Input).toBeInTheDocument();
-  expect(number2Input).toBeInTheDocument();
-  expect(operation).toBeInTheDocument();
-});
-
-it("sum operation", () => {
-  render(<Calculator />);
-
-  value1 = generarNumero(1, 5) ?? 20;
-  value2 = generarNumero(1, 5) ?? 1;
-
-  const number1 = screen.getByTestId("n");
-  const number2 = screen.getByTestId("nn");
-  const operation = screen.getByTestId("oper");
-
-  fireEvent.change(number1, { target: { value: value1 } });
-  fireEvent.change(number2, { target: { value: value2 } });
-  fireEvent.change(operation, { target: { value: "suma" } });
-
-  expect(screen.getByTestId("res").textContent).toBe(
-    `El resultado es:${sum(value1, value2)}`
-  );
-});
-
-it("substract operation", () => {
-  render(<Calculator />);
-
-  value1 = generarNumero(1, 5) ?? 20;
-  value2 = generarNumero(1, 5) ?? 1;
-
-  const number1 = screen.getByTestId("n");
-  const number2 = screen.getByTestId("nn");
-  const operation = screen.getByTestId("oper");
-
-  fireEvent.change(number1, { target: { value: value1 } });
-  fireEvent.change(number2, { target: { value: value2 } });
-  fireEvent.change(operation, { target: { value: "resta" } });
-
-  expect(screen.getByTestId("res").textContent).toBe(
-    `El resultado es:${sum(value1, value2)}`
-  );
-});
-
-it("multiply operation", () => {
-  render(<Calculator />);
-
-  value1 = generarNumero(1, 5) ?? 20;
-  value2 = generarNumero(1, 5) ?? 1;
-
-  const number1 = screen.getByTestId("n");
-  const number2 = screen.getByTestId("nn");
-  const operation = screen.getByTestId("oper");
-
-  fireEvent.change(number1, { target: { value: value1 } });
-  fireEvent.change(number2, { target: { value: value2 } });
-  fireEvent.change(operation, { target: { value: "multiplicacion" } });
-
-  expect(screen.getByTestId("res").textContent).toBe(
-    `El resultado es:${mult(value1, value2)}`
-  );
-});
-
-it("divide operation", () => {
-  render(<Calculator />);
-
-  value1 = generarNumero(1, 5) ?? 20;
-  value2 = generarNumero(1, 5) ?? 1;
-
-  const operation = screen.getByTestId("oper");
-
-  fireEvent.change(screen.getByTestId("n"), { target: { value: value1 } });
-  fireEvent.change(screen.getByTestId("nn"), { target: { value: value2 } });
-  fireEvent.change(operation, {
-    target: { value: "division" },
+    expect(screen.getByTestId("result").textContent).toBe(
+      `El resultado es: ${sum(wordA, wordB)}`
+    );
   });
 
-  expect(screen.getByTestId("res").textContent).toBe(
-    `El resultado es:${divid(value1, value2)}`
-  );
-});
+  it("renders rest", () => {
+    render(<Calculator />);
 
-it.only("spy for sum", () => {
-  render(<Calculator />);
+    fireEvent.change(screen.getByTestId("n"), { target: { value: wordA } });
+    fireEvent.change(screen.getByTestId("nn"), { target: { value: wordB } });
+    fireEvent.change(screen.getByTestId("operator"), {
+      target: { value: "rest" },
+    });
 
-  value1 = generarNumero(1, 5) ?? 20;
-  value2 = generarNumero(1, 5) ?? 20;
-
-  inputN1 = screen.getByTestId("n");
-  inputN2 = screen.getByTestId("nn");
-  inputOper = screen.getByTestId("oper");
-  inputRes = screen.getByTestId("res");
-
-  const spy = jest.spyOn(operations, "sum");
-
-  expect(inputN1.value).toBe("0");
-  expect(inputN2.value).toBe("0");
-  expect(inputOper.value).toBe("suma");
-
-  fireEvent.change(inputN1, { target: { value: value1 } });
-  fireEvent.change(inputN2, { target: { value: value2 } });
-  fireEvent.change(inputOper, {
-    target: { value: "suma" },
+    expect(screen.getByTestId("result").textContent).toBe(
+      `El resultado es: ${rest(wordA, wordB)}`
+    );
   });
 
-  expect(inputN1.value).toBe(value1.toString());
-  expect(inputN1.value).toBe(value2.toString());
-  expect(inputOper.value).toBe("suma");
+  it("renders mult", () => {
+    render(<Calculator />);
 
-  operation(parseFloat(inputN1.value), parseFloat(inputN2.value), "sum");
+    fireEvent.change(screen.getByTestId("n"), { target: { value: wordA } });
+    fireEvent.change(screen.getByTestId("nn"), { target: { value: wordB } });
+    fireEvent.change(screen.getByTestId("operator"), {
+      target: { value: "mult" },
+    });
 
-  const result = operation(
-    parseFloat(inputN1.value),
-    parseFloat(inputN2.value),
-    "sum"
-  );
-
-  fireEvent.change(inputRes, {
-    target: { "data-value": result },
+    expect(screen.getByTestId("result").textContent).toBe(
+      `El resultado es: ${mult(wordA, wordB)}`
+    );
   });
 
-  expect(inputRes["data-value"]).toBe(result);
+  it("renders divid", () => {
+    render(<Calculator />);
 
-  expect(spy).toHaveBeenCalled();
+    fireEvent.change(screen.getByTestId("n"), { target: { value: wordA } });
+    fireEvent.change(screen.getByTestId("nn"), { target: { value: wordB } });
+    fireEvent.change(screen.getByTestId("operator"), {
+      target: { value: "divid" },
+    });
+
+    expect(screen.getByTestId("result").textContent).toBe(
+      `El resultado es: ${divid(wordA, wordB)}`
+    );
+  });
 });

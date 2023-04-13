@@ -36,14 +36,14 @@ interface ISalinasMatoAColosio<Number> {
 }
 
 export function operation(a: number, b: number, operation: any) {
-  const OPERATION: ISalinasMatoAColosio<string> = {
+  const OPERATIONS: ISalinasMatoAColosio<string> = {
     sum: sum(a, b),
-    rest: rest(a, b),
-    divid: divid(a, b),
-    mult: mult(a, b),
+    substract: rest(a, b),
+    divide: divid(a, b),
+    multiply: mult(a, b),
   };
 
-  return OPERATION[operation];
+  return OPERATIONS[operation];
 }
 
 export function getRandomInt(max: number | any): any {
@@ -52,4 +52,21 @@ export function getRandomInt(max: number | any): any {
 
 export function getRandomFloat(max: number | any): any {
   return parseFloat((Math.random() * max).toFixed(2));
+}
+
+const getCharacters = (length: number) => {
+  let result = "";
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz´+{}_.<>¨*][]_-!#$%&/()="';
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+};
+
+export function getRandomCharacter(max: number) {
+  return getCharacters(max);
 }
