@@ -47,7 +47,8 @@
     ]
   },
   "devDependencies": {
-    "@types/moxios": "^0.4.15"
+    "@types/moxios": "^0.4.15",
+    "jest": "^27.5.1"
   },
   "jest": {
     "transformIgnorePatterns": [

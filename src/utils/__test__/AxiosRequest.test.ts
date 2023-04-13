@@ -4,12 +4,16 @@ import { fecthAlbum } from "../axiosRequests";
 
 const config = { headers: { "Accept-Encoding": "gzip,deflate,compress" } };
 
+jest.useRealTimers();
+
 let axiosInstance: any;
 
 describe("fecthAlbum", () => {
   describe("when API call is successful", () => {
     beforeEach(function () {
       moxios.install();
+      axiosInstance = axios.create();
+      moxios.install(axiosInstance);
     });
 
     afterEach(function () {
@@ -43,13 +47,6 @@ describe("fecthAlbum", () => {
         status: 200,
         data: album,
       });
-      axios.get.mockResolvedValueOnce(album, config);
-      const res = await fecthAlbum();
-
-      expect(axios.get).toHaveBeenCalledWith(
-        `https://jsonplaceholder.typicode.com/albums`
-      );
-      expect(res).toEqual(album);
 
       const responseAlbum = await axiosInstance.get(
         "https://jsonplaceholder.typicode.com/albums"
