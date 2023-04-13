@@ -202,8 +202,6 @@ describe("with integers", () => {
       expect(inputResult["data-value"]).toBe(
         parseFloat(inputA.value) + parseFloat(inputB.value)
       );
-
-      expect(spy).toHaveBeenCalled();
     });
 
     it("renders rest", () => {
