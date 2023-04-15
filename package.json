@@ -47,7 +47,9 @@
     ]
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@types/moxios": "^0.4.15",
+    "factory.ts": "^1.4.0",
     "jest": "^27.5.1"
   },
   "jest": {
